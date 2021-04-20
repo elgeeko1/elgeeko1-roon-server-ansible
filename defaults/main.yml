@@ -6,11 +6,18 @@ roon_server_path: /etc/roon-server # path on the host to store roon-server data
 #   host: least secure, easiest to configure, all features
 #   macvlan: more secure, more complicated configuration, all features
 #   bridge: most secure, RAAT devices not discoverable (requires multicast & broadcast)
-roon_network_mode: macvlan
+roon_network_mode: host
 
-# in macvlan mode, the subnet in which to create the macvlan network,
-# the gateway, the parent network interface, and Docker network name.
-roon_network_macvlan_subnet:  "{{ (ansible_default_ipv4.network ~ '/' ~ ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
-roon_network_macvlan_gateway: "{{ ansible_default_ipv4.gateway }}"
-roon_network_macvlan_parent_interface: "{{ ansible_default_ipv4.interface }}"
-roon_network_macvlan_name: "roon"
+# run Roon Server in a privileged container?
+roon_container_privileged: false
+
+# in macvlan mode, the macvlan network settings
+# this may work out of the box but docker will
+# assign an arbitrary IP address which may conflict
+# with your network; better to override in your playbook
+roon_network_macvlan:
+  name:         "roon"
+  subnet:       "{{ (ansible_default_ipv4.network ~ '/' ~ ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
+  gateway:      "{{ ansible_default_ipv4.gateway }}"
+  interface:    "{{ ansible_default_ipv4.interface }}"
+  ipv4_address: "" # if empty, ipv4 will be automatically set by docker
