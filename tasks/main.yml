@@ -1,0 +1,6 @@
+---
+- name: Configure filesystem
+  include_tasks: filesystem.yml
+
+- name: Start Roon
+  include_tasks: roon-docker.yml

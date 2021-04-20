@@ -1,0 +1,45 @@
+---
+- name: Docker pull latest elgeeko/roon-server
+  docker_image:
+    name: elgeeko/roon-server:latest
+    source: pull
+    force_source: true
+  register: dockerimage
+
+- name: Configure Docker network {{ roon_network_macvlan_name }}
+  docker_network:
+    name: "{{ roon_network_macvlan_name }}"
+    state: "{{ (roon_network_mode == 'macvlan') | ternary('present', 'absent') }}"
+    driver: macvlan
+    driver_options:
+      macvlan_mode: private
+      parent: "{{ roon_network_macvlan_parent_interface }}"
+    ipam_config:
+      - subnet:  "{{ roon_network_macvlan_subnet }}"
+        gateway: "{{ roon_network_macvlan_gateway }}"
+  register: dockernetwork
+
+- name: Start roon-server docker container
+  docker_container:
+    name: roon-server
+    image: elgeeko/roon-server:latest
+    state: started
+    recreate: "{{ dockerimage.changed or dockernetwork.changed }}"
+    restart_policy: unless-stopped
+    cleanup: true
+    keep_volumes: false
+    hostname: "{{ roon_server_name }}"
+    ports: "{{ (roon_network_mode == 'bridge') | ternary(roon_ports, []) }}"
+    volumes:
+      - "{{ roon_server_path }}/data:/var/roon"
+      - "{{ roon_server_path }}/music:/music:ro"
+      - /run/udev:/run/udev:ro # allow querying USB information
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    devices:
+      - /dev/bus/usb
+      - /dev/snd
+    networks: "{{ (roon_network_mode == 'macvlan') | ternary([{'name':roon_network_macvlan_name}], []) }}"
+    network_mode: "{{ roon_network_mode }}"
+    networks_cli_compatible: false
+    purge_networks: "{{ roon_network_mode == 'macvlan' }}"

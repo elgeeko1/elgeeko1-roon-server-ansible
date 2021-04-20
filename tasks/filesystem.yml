@@ -1,0 +1,27 @@
+---
+- name: Create {{ roon_server_path }}
+  file:
+    path: "{{ roon_server_path }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0775
+  become: true
+
+- name: Create {{ roon_server_path }}/data
+  file:
+    path: "{{ roon_server_path }}/data"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0775
+  become: true
+
+- name: Create {{ roon_server_path }}/music
+  file:
+    path: "{{ roon_server_path }}/music"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0775
+  become: true

@@ -1,0 +1,9 @@
+# roon ports, used only when roon_network_mode=bridge
+roon_ports:
+  - "9001-9002:9001-9002/tcp"
+  - "9003:9003/udp"
+  - "9100-9200:9100-9200/tcp"
+  - "49863:49863/tcp"
+  - "52667:52667/tcp"
+  - "52709:52709/tcp"
+  - "63098-63100:63098-63100/tcp"
