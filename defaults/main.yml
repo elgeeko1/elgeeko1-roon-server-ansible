@@ -1,5 +1,5 @@
 roon_server_name: "{{ inventory_hostname }}"
-roon_server_path: /etc/roon-server # path on the host to store roon-server data
+roon_server_path: /opt/RoonServer # path on the host to store roon-server data
 
 # docker network mode for roon container
 # values:

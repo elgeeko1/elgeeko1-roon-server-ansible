@@ -7,7 +7,7 @@ This role deploys the Docker image https://hub.docker.com/repository/docker/elge
 
 ## Configuring
 The variable `roon_server_path` defines the filesystem path on the host to store
-roon data, and defaults to `/etc/roon-server`. This should be a persistent
+roon data, and defaults to `/opt/RoonServer`. This should be a persistent
 location in your filesystem for storing the Roon Server configuration and cache.
 
 ## Security
