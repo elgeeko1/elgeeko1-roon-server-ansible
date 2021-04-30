@@ -1,0 +1,9 @@
+galaxy_info:
+  role_name: roon-server
+  author: elgeeko1
+  description: "Deploy Roon Server in a docker container."
+  license: MIT
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all

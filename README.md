@@ -3,6 +3,7 @@ This role deploys the Docker image https://hub.docker.com/repository/docker/elge
 
 ## Requirements
 - ansible
+- ansible collection ansible.netcommon (`ansible-galaxy install ansible.netcommon`)
 - docker
 
 ## Configuring
