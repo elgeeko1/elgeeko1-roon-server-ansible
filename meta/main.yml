@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: roon-server
+  role_name: elgeeko1-roon-server-ansible
   author: elgeeko1
   description: "Deploy Roon Server in a docker container."
   license: MIT
