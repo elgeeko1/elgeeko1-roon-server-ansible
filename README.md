@@ -1,5 +1,5 @@
 # Ansible role for roon-server-docker
-This role deploys the Docker image https://hub.docker.com/repository/docker/elgeeko/roon-server to a host and configures it to run at startup.
+This role deploys the Docker image [elgeeko/roon-server](https://hub.docker.com/repository/docker/elgeeko/roon-server) to a host and configures it to run at startup.
 
 # Requirements
 Provisioning host:
