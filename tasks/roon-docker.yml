@@ -33,7 +33,7 @@
     privileged: "{{ roon_container_privileged }}"
     volumes:
       - "{{ roon_server_path }}/data:/var/roon"
-      - "{{ roon_server_path }}/music:/music:ro"
+      - "{{ roon_server_music_path }}:/music:ro"
       - /run/udev:/run/udev:ro # allow querying USB information
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro

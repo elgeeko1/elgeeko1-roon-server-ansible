@@ -1,5 +1,6 @@
 roon_server_name: "{{ inventory_hostname }}"
 roon_server_path: /opt/RoonServer # path on the host to store roon-server data
+roon_server_music_path: "{{ roon_server_path }}/music"
 
 # docker network mode for roon container
 # values:

@@ -17,9 +17,9 @@
     mode:  0775
   become: true
 
-- name: Create {{ roon_server_path }}/music
+- name: Create {{ roon_server_music_path }}
   file:
-    path: "{{ roon_server_path }}/music"
+    path: "{{ roon_server_music_path }}"
     state: directory
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
