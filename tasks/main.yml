@@ -4,3 +4,7 @@
 
 - name: Start Roon
   include_tasks: roon-docker.yml
+
+- name: Start samba
+  include_tasks: samba.yml
+  when: roon_samba_enabled

@@ -1,0 +1,69 @@
+---
+- name: Create samba directory {{ roon_samba_path }}
+  file:
+    path: "{{ roon_samba_path }}"
+    state: directory
+  become: true
+
+- name: Create samba user
+  user:
+    name: "{{ roon_samba_media_user.name }}"
+    password: "!" # disabled
+    shell: /sbin/nologin
+    create_home: false
+  become: true
+  register: user
+
+- name: Record uid and gid for samba user
+  set_fact:
+    roon_samba_media_user: "{{ roon_samba_media_user | combine({ \
+      'uid': user.uid, \
+      'gid': user.group \
+     }) }}"
+
+- name: Deploy samba user file
+  template:
+    src: smb-users.j2
+    dest: "{{ roon_samba_path }}/smb-users"
+  become: true
+  notify: roon_samba_restart_required
+
+- name: Deploy samba configuration smb.conf
+  template:
+    src:  smb.conf.j2
+    dest: "{{ roon_samba_path }}/smb.conf"
+  become: true
+  notify: roon_samba_restart_required
+
+- name: Flush handlers to set variable roon_samba_restart_required
+  meta: flush_handlers
+
+- name: Docker pull latest elgeeko/samba
+  docker_image:
+    name: elgeeko/samba:latest
+    source: pull
+    force_source: true
+  notify: roon_samba_restart_required
+
+- name: Start samba docker container
+  docker_container:
+    name: samba
+    image: elgeeko/samba:latest
+    state: started
+    recreate: "{{ roon_samba_restart_required }}"
+    restart_policy: unless-stopped
+    cleanup: true
+    keep_volumes: false
+    hostname: "{{ roon_server_name }}"
+    ports:
+      - 137:137/udp # netbios name service (WINS)
+      - 138:138/udp # netbios datagram service
+      - 139:139/tcp # netbios session service
+      - 445:445/tcp # samba via TCP
+    volumes:
+      - "{{ roon_server_music_path }}:/opt/samba/shares/music"
+      - "{{ roon_server_path }}/data/Backup:/opt/samba/shares/roon_backup:ro"
+      - "{{ roon_samba_path }}/smb-users:/opt/samba/smb-users:ro"
+      - "{{ roon_samba_path }}/smb.conf:/etc/samba/smb.conf:ro"
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro

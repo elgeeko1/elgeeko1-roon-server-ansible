@@ -1,0 +1,2 @@
+# username password [uid group gid]
+{{ roon_samba_media_user.name }} {{ roon_samba_media_user.samba_password }} {% if 'uid' in roon_samba_media_user %}{{ roon_samba_media_user.uid }}{% endif %} {% if 'gid' in roon_samba_media_user %}{{ roon_samba_media_user.name }} {{ roon_samba_media_user.gid }}{% endif %}

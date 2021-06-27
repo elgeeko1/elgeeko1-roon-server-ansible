@@ -1,0 +1,54 @@
+# server config
+netbios name = {{ roon_server_name }}
+workgroup = {{ roon_samba_workgroup }}
+logging = syslog
+usershare max shares = 0
+
+# security
+security = user
+map to guest = bad user
+server min protocol = SMB2
+
+# --- OSX ---
+vfs objects = fruit
+map acl inherit = yes
+
+# apple extensions require support for extended attributes(xattr)
+# but we'll opt for a simple volume, so disable ea support
+ea support = no
+fruit:nfs_aces = no
+
+# enable apple extensions
+fruit:aapl = yes
+readdir_attr:aapl_finder_info = yes
+
+# OSX server icon in Finder
+fruit:model = MacSamba
+
+# OSX file cleanup
+fruit:zero_file_id = yes
+fruit:wipe_intentionally_left_blank_rfork = yes
+fruit:delete_empty_adfiles = yes
+
+# --- printing ---
+load printers = no
+disable spoolss = yes
+printing = bsd
+printcap name = /dev/null
+
+[music]
+  path = {{ roon_samba_path }}/shares/music
+  browseable = yes
+  valid users = {{ roon_samba_media_user.name }}
+  write list = {{ roon_samba_media_user.name }}
+  create mask = 0665
+  spotlight = no
+  inherit acls = yes
+
+[roon_backup]
+  path = {{ roon_samba_path }}/shares/roon_backup
+  browseable = yes
+  read only = yes
+  valid users = {{ roon_samba_media_user.name }}
+  spotlight = no
+  inherit acls = yes

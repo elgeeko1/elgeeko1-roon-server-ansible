@@ -1,0 +1,4 @@
+---
+- name: roon_samba_restart_required
+  set_fact:
+    roon_samba_restart_required: true

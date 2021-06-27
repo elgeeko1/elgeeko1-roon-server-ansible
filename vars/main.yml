@@ -7,3 +7,7 @@ roon_ports:
   - "52667:52667/tcp"
   - "52709:52709/tcp"
   - "63098-63100:63098-63100/tcp"
+
+# is a restart of the samba container needed?
+# set at runtime by handlers
+roon_samba_restart_required: false

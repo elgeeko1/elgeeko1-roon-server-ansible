@@ -1,5 +1,6 @@
 # Ansible role for roon-server-docker
-This role deploys the Docker image [elgeeko/roon-server](https://hub.docker.com/repository/docker/elgeeko/roon-server) to a host and configures it to run at startup.
+This role deploys the Docker image [elgeeko/roon-server](https://hub.docker.com/repository/docker/elgeeko/roon-server) to a host and configures it to run at startup. An optional Samba server configures
+samba shares for music and for Roon backup.
 
 # Requirements
 Provisioning host:
@@ -57,6 +58,9 @@ roles$ git clone https://github.com/elgeeko1/elgeeko1-roon-server-ansible
 The variable `roon_server_path` defines the filesystem path on the host to store
 roon data, and defaults to `/opt/RoonServer`. This should be a persistent
 location in your filesystem for storing the Roon Server configuration and cache.
+
+Modify `smb.conf.j2` in the templates folder to customize Samba.
+The default username and password is `music:music`.
 
 # Security
 

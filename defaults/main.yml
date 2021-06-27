@@ -22,3 +22,19 @@ roon_network_macvlan:
   gateway:      "{{ ansible_default_ipv4.gateway }}"
   interface:    "{{ ansible_default_ipv4.interface }}"
   ipv4_address: "" # if empty, ipv4 will be automatically set by docker
+
+# enable samba shares for Roon music and backup
+roon_samba_enabled: true
+roon_samba_workgroup: WORKGROUP
+
+# User to add to the samba service.
+# By default the user "media" will be configured as the samba user.
+# The user is configured with a disabled password and no login shell.
+roon_samba_media_user:
+  name: media
+  samba_password: "media"
+  uid: ""   # determined at runtime
+  gid: ""   # determined at runtime
+
+# samba configuration directory
+roon_samba_path: /opt/samba
