@@ -19,6 +19,11 @@
         gateway: "{{ roon_network_macvlan.gateway }}"
   register: dockernetwork
 
+- name: Get group ID for audio
+  getent:
+    database: group
+    key: audio
+
 - name: Start roon-server docker container
   docker_container:
     name: roon-server
@@ -31,10 +36,13 @@
     hostname: "{{ roon_server_name }}"
     ports: "{{ (roon_network_mode == 'bridge') | ternary(roon_ports, []) }}"
     privileged: "{{ roon_container_privileged }}"
+    groups:
+      - "{{ getent_group.audio[1] }}"
     volumes:
       - "{{ roon_server_path }}/data:/var/roon"
       - "{{ roon_server_music_path }}:/music:ro"
       - /run/udev:/run/udev:ro # allow querying USB information
+      - /usr/share/alsa:/usr/share/alsa # ALSA audio
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     devices:

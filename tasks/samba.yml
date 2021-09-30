@@ -3,6 +3,9 @@
   file:
     path: "{{ roon_samba_path }}"
     state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0775
   become: true
 
 - name: Create samba user
@@ -25,14 +28,12 @@
   template:
     src: smb-users.j2
     dest: "{{ roon_samba_path }}/smb-users"
-  become: true
   notify: roon_samba_restart_required
 
 - name: Deploy samba configuration smb.conf
   template:
     src:  smb.conf.j2
     dest: "{{ roon_samba_path }}/smb.conf"
-  become: true
   notify: roon_samba_restart_required
 
 - name: Flush handlers to set variable roon_samba_restart_required
