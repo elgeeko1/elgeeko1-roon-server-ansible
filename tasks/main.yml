@@ -1,10 +1,16 @@
 ---
+- name: apt update cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600 # 1 hr
+  become: true
+
 - name: Configure filesystem
-  include_tasks: filesystem.yml
+  ansible.builtin.import_tasks: filesystem.yml
 
 - name: Start Roon
-  include_tasks: roon-docker.yml
+  ansible.builtin.import_tasks: roon-docker.yml
 
 - name: Start samba
-  include_tasks: samba.yml
+  ansible.builtin.include_tasks: samba.yml
   when: roon_samba_enabled

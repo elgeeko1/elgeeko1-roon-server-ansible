@@ -1,4 +1,4 @@
 ---
 - name: roon_samba_restart_required
-  set_fact:
+  ansible.builtin.set_fact:
     roon_samba_restart_required: true

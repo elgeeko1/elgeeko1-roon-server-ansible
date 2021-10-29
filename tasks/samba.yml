@@ -1,6 +1,6 @@
 ---
 - name: Create samba directory {{ roon_samba_path }}
-  file:
+  ansible.builtin.file:
     path: "{{ roon_samba_path }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -9,7 +9,7 @@
   become: true
 
 - name: Create samba user
-  user:
+  ansible.builtin.user:
     name: "{{ roon_samba_media_user.name }}"
     password: "!" # disabled
     shell: /sbin/nologin
@@ -18,36 +18,36 @@
   register: user
 
 - name: Record uid and gid for samba user
-  set_fact:
+  ansible.builtin.set_fact:
     roon_samba_media_user: "{{ roon_samba_media_user | combine({ \
       'uid': user.uid, \
       'gid': user.group \
      }) }}"
 
 - name: Deploy samba user file
-  template:
+  ansible.builtin.template:
     src: smb-users.j2
     dest: "{{ roon_samba_path }}/smb-users"
   notify: roon_samba_restart_required
 
 - name: Deploy samba configuration smb.conf
-  template:
+  ansible.builtin.template:
     src:  smb.conf.j2
     dest: "{{ roon_samba_path }}/smb.conf"
   notify: roon_samba_restart_required
 
-- name: Flush handlers to set variable roon_samba_restart_required
-  meta: flush_handlers
-
 - name: Docker pull latest elgeeko/samba
-  docker_image:
+  community.general.docker_image:
     name: elgeeko/samba:latest
     source: pull
     force_source: true
   notify: roon_samba_restart_required
 
+- name: Flush handlers to set variable roon_samba_restart_required
+  ansible.builtin.meta: flush_handlers
+
 - name: Start samba docker container
-  docker_container:
+  community.general.docker_container:
     name: samba
     image: elgeeko/samba:latest
     state: started

@@ -1,6 +1,6 @@
 ---
 - name: Create {{ roon_server_path }}
-  file:
+  ansible.builtin.file:
     path: "{{ roon_server_path }}"
     state: directory
     owner: "{{ ansible_user }}"
@@ -9,7 +9,7 @@
   become: true
 
 - name: Create {{ roon_server_path }}/data
-  file:
+  ansible.builtin.file:
     path: "{{ roon_server_path }}/data"
     state: directory
     owner: "{{ ansible_user }}"
@@ -18,7 +18,7 @@
   become: true
 
 - name: Create {{ roon_server_music_path }}
-  file:
+  ansible.builtin.file:
     path: "{{ roon_server_music_path }}"
     state: directory
     owner: "{{ ansible_user }}"
