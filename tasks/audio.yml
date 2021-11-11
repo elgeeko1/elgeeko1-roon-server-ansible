@@ -1,0 +1,16 @@
+---
+- name: apt install alsa
+  ansible.builtin.apt:
+    pkg:
+      - alsa
+      - alsa-utils
+      - alsa-tools
+    state: latest
+  become: true
+
+- name: add user {{ ansible_user }} to group audio
+  ansible.builtin.user:
+    name:   "{{ ansible_user }}"
+    groups: audio
+    append: true
+  become: true
