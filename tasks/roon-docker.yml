@@ -34,7 +34,7 @@
     cleanup: true
     keep_volumes: false
     hostname: "{{ roon_server_name }}"
-    ports: "{{ (roon_network_mode == 'bridge') | ternary(roon_ports, []) }}"
+    publish_all_ports: true
     privileged: "{{ roon_container_privileged }}"
     groups:
       - "{{ getent_group.audio[1] }}"

@@ -5,6 +5,9 @@
     cache_valid_time: 3600 # 1 hr
   become: true
 
+- name: Configure audio system
+  ansible.builtin.import_tasks: audio.yml
+
 - name: Configure filesystem
   ansible.builtin.import_tasks: filesystem.yml
 
