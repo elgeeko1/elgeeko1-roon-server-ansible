@@ -33,7 +33,7 @@
     restart_policy: unless-stopped
     cleanup: true
     keep_volumes: false
-    hostname: "{{ roon_server_name }}"
+    hostname: "{{ roon_hostname }}"
     publish_all_ports: true
     privileged: "{{ roon_container_privileged }}"
     groups:
@@ -57,3 +57,4 @@
     network_mode: "{{ roon_network_mode }}"
     networks_cli_compatible: false
     purge_networks: "{{ roon_network_mode == 'macvlan' }}"
+    log_driver: "local"  # default doesn't log rotate

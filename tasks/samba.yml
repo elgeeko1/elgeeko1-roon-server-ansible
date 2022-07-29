@@ -55,7 +55,7 @@
     restart_policy: unless-stopped
     cleanup: true
     keep_volumes: false
-    hostname: "{{ roon_server_name }}"
+    hostname: "{{ roon_hostname }}"
     ports:
       - 137:137/udp # netbios name service (WINS)
       - 138:138/udp # netbios datagram service
