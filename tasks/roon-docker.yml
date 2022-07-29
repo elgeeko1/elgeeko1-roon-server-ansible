@@ -36,6 +36,7 @@
     hostname: "{{ roon_hostname }}"
     publish_all_ports: true
     privileged: "{{ roon_container_privileged }}"
+    user: "{{ roon_container_user }}"
     groups:
       - "{{ getent_group.audio[1] }}"
     volumes:
@@ -48,6 +49,11 @@
     devices:
       - /dev/bus/usb
       - /dev/snd
+    capabilities:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    security_opts:
+      - apparmor:unconfined
     # attach to macvlan network in macvlan mode, otherwise leave empty
     networks: "{{ (roon_network_mode == 'macvlan') \
       | ternary( \

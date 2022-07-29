@@ -103,3 +103,10 @@ If you are unable to access your DAC, or if you need a bus other than USB (such
 as I2C), you will either need to map the device into the container, or revert to using the insecure docker privileged execution mode.
 
 `roon_container_privileged: true`
+
+# Mounting network shares
+Mounting cifs shares from a docker container either requires RoonServer
+to run as root, or for fstab to be configured in advance of starting
+the container and configuring permissions of the container users.
+The simplest workaround to support this comes at the unfortunate cost
+of security, and is to set `roon_container_user` to `root`.
