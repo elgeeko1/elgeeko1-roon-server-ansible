@@ -62,8 +62,8 @@
       - 139:139/tcp # netbios session service
       - 445:445/tcp # samba via TCP
     volumes:
+      - roon-server-data:/opt/samba/shares/roon_backup:ro
       - "{{ roon_server_music_path }}:/opt/samba/shares/music"
-      - "{{ roon_server_path }}/data/Backup:/opt/samba/shares/roon_backup:ro"
       - "{{ roon_samba_path }}/smb-users:/opt/samba/smb-users:ro"
       - "{{ roon_samba_path }}/smb.conf:/etc/samba/smb.conf:ro"
       - /etc/localtime:/etc/localtime:ro

@@ -1,7 +1,7 @@
 ---
-- name: Docker pull latest elgeeko/roon-server
+- name: Docker pull latest elgeeko/roon-server:{{ roon_docker_tag }}
   community.general.docker_image:
-    name: elgeeko/roon-server:latest
+    name: elgeeko/roon-server:{{ roon_docker_tag }}
     source: pull
     force_source: true
   register: dockerimage
@@ -19,6 +19,14 @@
         gateway: "{{ roon_network_macvlan.gateway }}"
   register: dockernetwork
 
+- name: Create docker volume roon-server-data
+  community.docker.docker_volume:
+    name: roon-server-data
+
+- name: Create docker volume roon-server-cache
+  community.docker.docker_volume:
+    name: roon-server-cache
+
 - name: Get group ID for audio
   ansible.builtin.getent:
     database: group
@@ -27,7 +35,7 @@
 - name: Start roon-server docker container
   community.general.docker_container:
     name: roon-server
-    image: elgeeko/roon-server:latest
+    image: elgeeko/roon-server:{{ roon_docker_tag }}
     state: started
     recreate: "{{ dockerimage.changed or dockernetwork.changed }}"
     restart_policy: unless-stopped
@@ -40,10 +48,10 @@
     groups:
       - "{{ getent_group.audio[1] }}"
     volumes:
-      - "{{ roon_server_path }}/data:/var/roon"
+      - roon-server-data:/opt/RoonServer
+      - roon-server-cache:/var/roon
       - "{{ roon_server_music_path }}:/music:ro"
       - /run/udev:/run/udev:ro # allow querying USB information
-      - /usr/share/alsa:/usr/share/alsa # ALSA audio
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
     devices:

@@ -12,7 +12,7 @@
   ansible.builtin.import_tasks: filesystem.yml
 
 - name: Start Roon
-  ansible.builtin.import_tasks: roon-docker.yml
+  ansible.builtin.import_tasks: roon-server-docker.yml
 
 - name: Start samba
   ansible.builtin.include_tasks: samba.yml
