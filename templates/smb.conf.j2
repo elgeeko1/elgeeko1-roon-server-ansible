@@ -1,40 +1,42 @@
-# server config
-netbios name = {{ roon_hostname }}
-workgroup = {{ roon_samba_workgroup }}
-logging = syslog
-usershare max shares = 0
+[global]
+  # server config
+  netbios name = {{ roon_hostname }}
+  workgroup = {{ roon_samba_workgroup }}
+  server role = standalone server
+  # logging = syslog
+  usershare max shares = 0
 
-# security
-security = user
-map to guest = bad user
-server min protocol = SMB2
+  # security
+  security = user
+  map to guest = bad user
+  server min protocol = SMB3
+  
+  # --- OSX ---
+  vfs objects = fruit
+  map acl inherit = yes
 
-# --- OSX ---
-vfs objects = fruit
-map acl inherit = yes
+  # apple extensions require support for extended attributes(xattr)
+  # but we'll opt for a simple volume, so disable ea support
+  ea support = no
+  fruit:nfs_aces = no
 
-# apple extensions require support for extended attributes(xattr)
-# but we'll opt for a simple volume, so disable ea support
-ea support = no
-fruit:nfs_aces = no
+  # enable apple extensions
+  fruit:aapl = yes
+  readdir_attr:aapl_finder_info = yes
 
-# enable apple extensions
-fruit:aapl = yes
-readdir_attr:aapl_finder_info = yes
+  # OSX server icon in Finder
+  fruit:model = MacSamba
 
-# OSX server icon in Finder
-fruit:model = MacSamba
+  # OSX file cleanup
+  fruit:zero_file_id = yes
+  fruit:wipe_intentionally_left_blank_rfork = yes
+  fruit:delete_empty_adfiles = yes
 
-# OSX file cleanup
-fruit:zero_file_id = yes
-fruit:wipe_intentionally_left_blank_rfork = yes
-fruit:delete_empty_adfiles = yes
-
-# --- printing ---
-load printers = no
-disable spoolss = yes
-printing = bsd
-printcap name = /dev/null
+  # --- printing ---
+  load printers = no
+  disable spoolss = yes
+  printing = bsd
+  printcap name = /dev/null
 
 [music]
   path = {{ roon_samba_path }}/shares/music

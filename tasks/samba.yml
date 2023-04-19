@@ -36,9 +36,9 @@
     dest: "{{ roon_samba_path }}/smb.conf"
   notify: roon_samba_restart_required
 
-- name: Docker pull latest elgeeko/samba
+- name: Docker pull latest elgeeko/samba:{{ samba_docker_tag }}
   community.general.docker_image:
-    name: elgeeko/samba:latest
+    name: elgeeko/samba:{{ samba_docker_tag }}
     source: pull
     force_source: true
   notify: roon_samba_restart_required
@@ -49,18 +49,19 @@
 - name: Start samba docker container
   community.general.docker_container:
     name: samba
-    image: elgeeko/samba:latest
+    image: elgeeko/samba:{{ samba_docker_tag }}
     state: started
     recreate: "{{ roon_samba_restart_required }}"
     restart_policy: unless-stopped
     cleanup: true
     keep_volumes: false
     hostname: "{{ roon_hostname }}"
-    ports:
-      - 137:137/udp # netbios name service (WINS)
-      - 138:138/udp # netbios datagram service
-      - 139:139/tcp # netbios session service
-      - 445:445/tcp # samba via TCP
+    network_mode: host
+    # ports:
+    #   - 137:137/udp # netbios name service (WINS)
+    #   - 138:138/udp # netbios datagram service
+    #   - 139:139/tcp # netbios session service
+    #   - 445:445/tcp # samba via TCP
     volumes:
       - roon-server-data:/opt/samba/shares/roon_backup:ro
       - "{{ roon_server_music_path }}:/opt/samba/shares/music"

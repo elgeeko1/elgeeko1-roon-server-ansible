@@ -1,4 +1,5 @@
 roon_docker_tag: latest
+samba_docker_tag: latest
 
 roon_hostname: "{{ inventory_hostname }}"
 roon_server_music_path: "/music" # path on the host to store music
