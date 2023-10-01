@@ -76,7 +76,9 @@ Alternately the Roon Server container can run with the `macvlan` network mode,
 which is the most secure configuration that still allows Roon to discover
 all RAAT devices.
 
-Macvlan network mode is set by the following role variables:
+*Warning* macvlan network mode does not work over wireless connections.
+
+macvlan network mode is set by the following role variables:
 ```
 roon_network_mode: macvlan
 roon_network_macvlan:
