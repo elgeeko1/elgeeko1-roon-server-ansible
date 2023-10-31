@@ -62,9 +62,8 @@
       - DAC_READ_SEARCH
     security_opts:
       - apparmor:unconfined
-    network_mode: "{{ roon_network_mode }}"
     networks: "{{ (roon_network_mode == 'macvlan') | ternary( \
-          [{'name': roon_network_macvlan.name, 'ipv4_address': roon_network_macvlan.ipv4_address}], \
-          [{'name': roon_network_mode }]  ) }}"
+        [{'name': roon_network_macvlan.name, 'ipv4_address': roon_network_macvlan.ipv4_address}], \
+        [{'name': roon_network_mode }]  ) }}"
     ports: "{{ (roon_network_mode == 'host') | ternary([], roon_published_ports) }}"
     log_driver: "local"  # default doesn't log rotate
