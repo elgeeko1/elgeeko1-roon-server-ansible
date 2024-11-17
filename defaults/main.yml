@@ -17,7 +17,7 @@ roon_container_privileged: false
 # container user with which to run Roon Server
 # change to 'root' if needing to mount cifs
 # network shares
-roon_container_user: roon
+roon_container_user: ubuntu
 
 # in macvlan mode, the macvlan network settings
 # this may work out of the box but docker will
