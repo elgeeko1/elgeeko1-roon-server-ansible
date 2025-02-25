@@ -11,9 +11,9 @@
 - name: Configure filesystem
   ansible.builtin.import_tasks: filesystem.yml
 
-- name: Start Roon
-  ansible.builtin.import_tasks: roon-server-docker.yml
-
 - name: Start samba
   ansible.builtin.include_tasks: samba.yml
   when: roon_samba_enabled
+
+- name: Start Roon
+  ansible.builtin.import_tasks: roon-server-docker.yml

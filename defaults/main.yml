@@ -45,3 +45,10 @@ roon_samba_media_user:
 
 # samba configuration directory
 roon_samba_path: /opt/samba
+
+# extra volumes to append to samba docker container
+# in addition to the volumes used by roon
+roon_samba_volumes: []
+
+# smb.conf template file to append
+roon_samba_conf_appendix_template:

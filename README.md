@@ -59,8 +59,15 @@ The variable `roon_server_path` defines the filesystem path on the host to store
 roon data, and defaults to `/opt/RoonServer`. This should be a persistent
 location in your filesystem for storing the Roon Server configuration and cache.
 
+If you wish to add additional samba mounts, create a template file
+and set the variable `roon_samba_conf_appendix_template` to its path.
+
 Modify `smb.conf.j2` in the templates folder to customize Samba.
 The default username and password is `music:music`.
+
+You may map additional volumes using the docker volume mapping syntax into the
+samba container with the variable `roon_samba_extra_volumes`. The variable is
+a list and defaults to `[]`.
 
 # Security
 

@@ -13,3 +13,10 @@ roon_published_ports:
 # is a restart of the samba container needed?
 # set at runtime by handlers
 roon_samba_restart_required: false
+
+# roon filesystem mounts for samba
+roon_samba_volumes:
+  - roon-server-cache:/opt/samba/shares/roon_backup:ro
+  - "{{ roon_server_music_path }}:/opt/samba/shares/music"
+  - "{{ roon_samba_path }}/smb-users:/opt/samba/smb-users:ro"
+  - "{{ roon_samba_path }}/smb.conf:/etc/samba/smb.conf:ro"

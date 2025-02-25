@@ -25,23 +25,42 @@
      }) }}"
 
 - name: Deploy samba user file
+  notify: roon_samba_restart_required
   ansible.builtin.template:
     src: smb-users.j2
     dest: "{{ roon_samba_path }}/smb-users"
-  notify: roon_samba_restart_required
+  
+- name: Create directory {{ roon_samba_path }}/smb.conf.d
+  ansible.builtin.file:
+    path: "{{ roon_samba_path }}/smb.conf.d"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
 
-- name: Deploy samba configuration smb.conf
+- name: Deploy samba configuration 10-smb.roon.conf
+  notify: roon_samba_restart_required
   ansible.builtin.template:
-    src:  smb.conf.j2
-    dest: "{{ roon_samba_path }}/smb.conf"
-  notify: roon_samba_restart_required
+    src:  smb.roon.conf.j2
+    dest: "{{ roon_samba_path }}/smb.conf.d/10-smb.roon.conf"
+  
+- name: Deploy samba appendix 20-smb.appendix.conf
+  when: roon_samba_conf_appendix_template
+  ansible.builtin.template:
+    src: "{{ roon_samba_conf_appendix_template }}"
+    dest: "{{ roon_samba_path }}/smb.conf.d/20-smb.appendix.conf"
 
-- name: Docker pull latest elgeeko/samba:{{ samba_docker_tag }}
+- name: Combine configuration files into 'smb.conf'
+  notify: roon_samba_restart_required
+  ansible.builtin.assemble:
+    src: "{{ roon_samba_path }}/smb.conf.d"
+    dest: "{{ roon_samba_path }}/smb.conf"
+    regexp: "^(?:\\d+-)?smb\\..*\\.conf$"
+
+- name: Docker pull elgeeko/samba:{{ samba_docker_tag }}
+  notify: roon_samba_restart_required
   community.general.docker_image:
     name: elgeeko/samba:{{ samba_docker_tag }}
     source: pull
     force_source: true
-  notify: roon_samba_restart_required
 
 - name: Flush handlers to set variable roon_samba_restart_required
   ansible.builtin.meta: flush_handlers
@@ -62,10 +81,8 @@
     #   - 138:138/udp # netbios datagram service
     #   - 139:139/tcp # netbios session service
     #   - 445:445/tcp # samba via TCP
-    volumes:
-      - roon-server-cache:/opt/samba/shares/roon_backup:ro
-      - "{{ roon_server_music_path }}:/opt/samba/shares/music"
-      - "{{ roon_samba_path }}/smb-users:/opt/samba/smb-users:ro"
-      - "{{ roon_samba_path }}/smb.conf:/etc/samba/smb.conf:ro"
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+    volumes: "{{ 
+        roon_samba_volumes + roon_samba_extra_volumes
+        + [ '/etc/localtime:/etc/localtime:ro',
+            '/etc/timezone:/etc/timezone:ro' ]
+      }}"

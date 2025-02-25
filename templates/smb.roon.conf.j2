@@ -39,6 +39,7 @@
   printcap name = /dev/null
 
 [music]
+  comment = Music
   path = {{ roon_samba_path }}/shares/music
   browseable = yes
   valid users = {{ roon_samba_media_user.name }}
@@ -48,9 +49,11 @@
   inherit acls = yes
 
 [roon_backup]
+  comment = Roon Backup
   path = {{ roon_samba_path }}/shares/roon_backup
   browseable = yes
   read only = yes
   valid users = {{ roon_samba_media_user.name }}
   spotlight = no
   inherit acls = yes
+
