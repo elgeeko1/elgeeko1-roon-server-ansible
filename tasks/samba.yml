@@ -82,7 +82,7 @@
     #   - 139:139/tcp # netbios session service
     #   - 445:445/tcp # samba via TCP
     volumes: "{{ 
-        roon_samba_volumes + roon_samba_extra_volumes
+        roon_samba_volumes
         + [ '/etc/localtime:/etc/localtime:ro',
             '/etc/timezone:/etc/timezone:ro' ]
       }}"
