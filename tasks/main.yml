@@ -17,3 +17,6 @@
 
 - name: Start Roon
   ansible.builtin.import_tasks: roon-server-docker.yml
+
+- name: Start Roon Extension Manager
+  ansible.builtin.import_tasks: extension-manager.yml

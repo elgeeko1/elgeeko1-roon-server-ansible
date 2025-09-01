@@ -1,0 +1,60 @@
+---
+- name: Create ~/.cache/
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.cache"
+    state: directory
+    mode: 0700
+
+- name: Clone TheAppgineer/roon-extension-manager
+  ansible.builtin.git:
+    repo: https://github.com/TheAppgineer/roon-extension-manager
+    version: v1.x
+    dest: "{{ ansible_env.HOME }}/.cache/roon-extension-manager"
+
+- name: Docker build roon-extension-manager
+  community.docker.docker_image_build:
+    name: roon-extension-manager
+    tag: v1.x
+    path: "{{ ansible_env.HOME }}/.cache/roon-extension-manager"
+
+- name: Create docker volume roon-extension-manager
+  community.docker.docker_volume:
+    name: roon-extension-manager
+
+- name: Get group ID for 'docker'
+  ansible.builtin.getent:
+    database: group
+    key: docker
+
+- name: Start roon-extension-manager
+  community.general.docker_container:
+    name: roon-extension-manager
+    image: theappgineer/roon-extension-manager:v1.x-standalone
+    state: started
+    comparisons:
+      image: strict
+      networks: strict
+      env: strict
+    restart_policy: unless-stopped
+    cleanup: true
+    keep_volumes: false
+    hostname: roon-extension-manager
+    groups:
+      - "{{ getent_group.docker[1] }}"
+      - 0
+    env:
+      TZ: America/Los_Angeles
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - roon-extension-manager:/home/node/.rem
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    security_opts:
+      - apparmor:unconfined
+    privileged: true
+    #network_mode: host
+    # networks: "{{ (roon_network_mode == 'macvlan') | ternary( \
+    #     [{'name': roon_network_macvlan.name, 'ipv4_address': roon_extension_ip}], \
+    #     [{'name': roon_network_mode }]  ) }}"
+    ports: "{{ (roon_network_mode == 'host') | ternary([], roon_published_ports) }}"
+    log_driver: "local"  # default doesn't log rotate
