@@ -35,6 +35,7 @@
     name: roon-server
     image: elgeeko/roon-server:{{ roon_docker_tag }}
     state: started
+    init: true
     comparisons:
       image: strict
       networks: strict
@@ -57,9 +58,6 @@
     devices:
       - /dev/bus/usb
       - /dev/snd
-    capabilities:
-      - SYS_ADMIN
-      - DAC_READ_SEARCH
     security_opts:
       - apparmor:unconfined
     networks: "{{ (roon_network_mode == 'macvlan') | ternary( \
