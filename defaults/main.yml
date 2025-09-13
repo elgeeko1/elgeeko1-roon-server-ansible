@@ -30,6 +30,8 @@ roon_network_macvlan:
   interface:    "{{ ansible_default_ipv4.interface }}"
   ipv4_address: "" # if empty, ipv4 will be automatically set by docker
 
+roon_additional_networks: []
+
 # enable samba shares for Roon music and backup
 roon_samba_enabled: true
 roon_samba_workgroup: WORKGROUP
