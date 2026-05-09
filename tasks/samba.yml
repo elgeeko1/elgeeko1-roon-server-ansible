@@ -43,7 +43,9 @@
     dest: "{{ roon_samba_path }}/smb.conf.d/10-smb.roon.conf"
   
 - name: Deploy samba appendix 20-smb.appendix.conf
-  when: roon_samba_conf_appendix_template
+  when:
+    - roon_samba_conf_appendix_template is defined
+    - roon_samba_conf_appendix_template | length > 0
   ansible.builtin.template:
     src: "{{ roon_samba_conf_appendix_template }}"
     dest: "{{ roon_samba_path }}/smb.conf.d/20-smb.appendix.conf"

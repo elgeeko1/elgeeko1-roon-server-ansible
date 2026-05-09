@@ -25,7 +25,7 @@ roon_container_user: ubuntu
 # with your network; better to override in your playbook
 roon_network_macvlan:
   name:         "roon"
-  subnet:       "{{ (ansible_default_ipv4.network ~ '/' ~ ansible_default_ipv4.netmask) | ipaddr('network/prefix') }}"
+  subnet:       "{{ (ansible_default_ipv4.network ~ '/' ~ ansible_default_ipv4.netmask) | ansible.utils.ipaddr('network/prefix') }}"
   gateway:      "{{ ansible_default_ipv4.gateway }}"
   interface:    "{{ ansible_default_ipv4.interface }}"
   ipv4_address: "" # if empty, ipv4 will be automatically set by docker
